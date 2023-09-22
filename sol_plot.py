@@ -10,9 +10,9 @@ import numpy as np
 # y = msh.points[:,1]
 
 
-u = loadmat("Interpolated_data")
+u = loadmat("data_incident")
 u_inc = u['u']
-u = loadmat("Interpolated_data_full")
+u = loadmat("data_total")
 u_tot = u['u']
 
 W = 500
