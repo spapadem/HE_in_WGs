@@ -148,4 +148,4 @@ for p in mesh.ngmesh.Points():
      i = i + 1
 sol_on_grid = griddata(mesh_points, sol_on_mesh, (grid_x, grid_y), method='cubic') # Interpolate the solution from the mesh points into the regular grid points.
 
-savemat("data_total.mat",{"u":sol_on_grid}) # Save a mat file of the solution on a regular grid.
+savemat("data/data_total.mat",{"u":sol_on_grid}) # Save a mat file of the solution on a regular grid.

@@ -10,9 +10,9 @@ import numpy as np
 # y = msh.points[:,1]
 
 
-u = loadmat("data_incident")
+u = loadmat("data/data_incident")
 u_inc = u['u']
-u = loadmat("data_total")
+u = loadmat("data/data_total")
 u_tot = u['u']
 
 W = 500
