@@ -25,9 +25,9 @@ def ConvertSolutiononMesh(mesh,gfu):
 # will be implemented in a future project.
 #
 #           -----------------------------------------------------------------------------
-#
-#
-#
+#                                                               __
+#                                                              /  \
+#                                                              \__/
 #
 #           -----------------------------------------------------------------------------
 
@@ -59,9 +59,9 @@ WG.edges.Max(X).name='right' # Labeling the boundary at X = W.
 # Truncating the waveguide's infinite domain to a box using PMLs. 
 # We will use one PML on the left (named PMLL) and one on the right (PMLR).
 #           -----------------------------------------------------------------------------
-#               |  P |                                                 |  P  |
-#               |  M |                                                 |  M  |
-#               |  L |                                                 |  L  |
+#               |  P |                                  __             |  P  |
+#               |  M |                                 /  \            |  M  |
+#               |  L |                                 \__/            |  L  |
 #               |  L |                                                 |  R  |
 #           -----------------------------------------------------------------------------
 
