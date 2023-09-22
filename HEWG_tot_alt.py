@@ -96,7 +96,7 @@ curves = [[["line",p1,p2],"top"],
           [["line",p14,p1],"pml_left_b"]]
 [geo.Append(c,bc=bc) for c,bc in curves]
 mesh = Mesh(geo.GenerateMesh(maxh=10))
-#mesh.Curve(3)
+mesh.Curve(3)
 Draw(mesh)
 print("Ok")
 
