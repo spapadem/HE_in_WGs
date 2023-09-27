@@ -7,6 +7,10 @@ from scipy.interpolate import griddata
 import numpy as np
 import meshio
 
+import ngsolve.internal as ngsint
+ngsint.viewoptions.drawoutline=0 # disable triangle outline when plotting.
+
+
 # This function saves the solution that typically lives on all the DOFs, just on the mesh points. 
 # Useful for visualization purposes when using higher order elements, as the exported mesh seems
 # to not include the DOFs as well. We will use this function to save the solution on just the mesh points
@@ -47,102 +51,80 @@ PML_size = 4*lambda_0 # Length of the Perfectly Matched Layer (PML) that helps u
 
 # Location and size of the scatterer.
 x_sc = 19*lambda_0 # Location in x-axis
-y_sc = 5*lambda_0 # Location in y-axis
+y_sc = 12*lambda_0 # Location in y-axis
 b = 1*lambda_0 # Size of the scatterer (radius)
 
 # Creating the waveguide geometry.
 geo = SplineGeometry()
 
-pnts =[(-PML_size,0), #1
-        (0,0), #2
-       (Wc,0),  #3
-       (0.5*(Wc+Wm), 0), #4
-       (Wm-5*lambda_0,0), #5
-       (Wm,0), #6
-       (Wm+PML_size,0), #7
-       (Wm+PML_size,Dm), #8
-       (Wm,Dm),  #9
-       (Wm-5*lambda_0,Dm), #10
-       (0.5*(Wc+Wm), Dm/2), #11
-       (Wc,Dc), #12 
-       (0,Dc), #13
-       (-PML_size,Dc)] #14
-p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14 = [geo.AppendPoint(*pnt) for pnt in pnts]
-# curves = [[["line",p1,p2],"top"],
-#           [["line",p2,p3],"top"],
-#           [["line",p3,p4],"top"],
-#           [["line",p4,p5],"top"],
-#           [["line",p5,p6],"top"],
-#           [["line",p6,p7],"top"],
-#           [["line",p7,p8],"pml_right_b"],
-#           [["line",p8,p9],"bottom"],
-#           [["line",p9,p10],"bottom"],
-#           [["spline3",p10,p11,p12],"bottom"],
-#           [["line",p12,p13],"bottom"],
-#           [["line",p13,p14],"bottom"],
-#           [["line",p14,p1],"pml_left_b"]]
+pnts =[(0,0), #1
+       (Wm,0), #2
+       (Wm,Dm),  #3
+       (Wm-5*lambda_0,Dm), #4
+       (0.5*(Wc+Wm-5*lambda_0), (Dc+Dm)/2), #5
+       (Wc,Dc), #6
+       (0,Dc)] #7
+p1,p2,p3,p4,p5,p6,p7 = [geo.AppendPoint(*pnt) for pnt in pnts]
 curves = [[["line",p1,p2],"top"],
-          [["line",p2,p3],"top"],
-          [["line",p3,p4],"top"],
-          [["line",p4,p5],"top"],
-          [["line",p5,p6],"top"],
-          [["line",p6,p7],"top"],
-          [["line",p7,p8],"pml_right_b"],
-          [["line",p8,p9],"bottom"],
-          [["line",p9,p10],"bottom"],
-          [["spline3",p10,p11,p12],"bottom"],
-          [["line",p12,p13],"bottom"],
-          [["line",p13,p14],"bottom"],
-          [["line",p14,p1],"pml_left_b"]]
+          [["line",p2,p3],"right"],
+          [["line",p3,p4],"bottom"],
+          [["spline3",p4,p5,p6],"bottom"],
+          [["line",p6,p7],"bottom"],
+          [["line",p7,p1],"left"]]
 [geo.Append(c,bc=bc) for c,bc in curves]
-mesh = Mesh(geo.GenerateMesh(maxh=10))
-mesh.Curve(3)
-Draw(mesh)
-print("Ok")
 
-#PMLL.faces.name = 'PMLLEFT' # Naming the faces of the PMLL layer. We will need this for the SetPML command later.
-#PMLR.faces.name = 'PMLRIGHT' # Naming the faces of the PMLL layer. We will need this for the SetPML command later.
+geo.AddRectangle((-PML_size,0),(0,Dc),leftdomain=2,bc="PMLL")
+geo.AddRectangle((Wm,0),(Wm+PML_size,Dm),leftdomain=3,bc="PMLR")
+#geo.AddCircle((x_sc,y_sc),2*b,leftdomain=0,rightdomain=1,bc="scatterer")
+# help(geo.CreatePML)
+geo.SetMaterial(2,"PMLL")
+geo.SetMaterial(3,"PMLR")
+mesh = Mesh(geo.GenerateMesh(maxh=5))
+pml_bnd = ["right","left"]
+mesh.Curve(3)
+#Draw(mesh)
+print("Ok")
 
 # # Letting the mesh know which are the PML layers. Notice that we essentially redefine the WGBOX, add the absorbing parameter (2j).
 # # We then tell the mesh which labels correspond to PMLs. In our case it's the PMLLEFT and PMLRIGHT faces we defined earlier.
-# mesh.SetPML(pml.Cartesian((0,0), (W,D), 2j),"PMLLEFT|PMLRIGHT") 
+mesh.SetPML(pml.Cartesian((0,0), (Wm,Dm), 2j),"PMLL|PMLR") 
 
 # #Draw(mesh); Optional meshing drawing to see our work before proceeding.
 
 # # Creating the finite element space based on the mesh we just created.
 # # We define the order of the finite elements, and boundary conditions (leave blank for Neummann b.c.'s)
-# fes = H1(mesh, order=5, complex=True, dirichlet='top|bottom|plm_left_b|pml_right_b') 
+fes = H1(mesh, order=5, complex=True, dirichlet='top|bottom|scatterer') 
 
-# u, v = fes.TnT() # Creating Test and Trial functions u, v.
+u, v = fes.TnT() # Creating Test and Trial functions u, v.
 
 
 # # Source present in the waveguide.
-# f = 33. # Frequency in which the source emits its pulse.
-# omega = 2.*pi*f / c0 # Angular frequency.
-# x_s=50. # Position of source in x-axis.
-# y_s=100. # Position of source in y-axis.
-# pulse = exp(-(omega**2)*((x-x_s)*(x-x_s) + (y-y_s)*(y-y_s)))
+f = 73. # Frequency in which the source emits its pulse.
+omega = 2.*pi*f / c0 # Angular frequency.
+x_s=Wm-50. # Position of source in x-axis.
+y_s=100. # Position of source in y-axis.
+pulse = exp(-(omega**2)*((x-x_s)*(x-x_s) + (y-y_s)*(y-y_s)))
 
 
-# # Draw(pulse, mesh,'mesh') # Optional drawing to see what the source looks like.
+#Draw(pulse, mesh,'mesh') # Optional drawing to see what the source looks like.
 
-# # Creating the weak form of the Helmholtz equation -Du - k^2 u = f
-# a = BilinearForm(fes, symmetric=True) # Setting a as a bilinear form
-# a += grad(u)*grad(v)*dx - omega*omega*u*v*dx
-# a.Assemble()
+# Creating the weak form of the Helmholtz equation -Du - k^2 u = f
+a = BilinearForm(fes, symmetric=True) # Setting a as a bilinear form
+a += grad(u)*grad(v)*dx - omega*omega*u*v*dx
+a.Assemble()
 
-# f = LinearForm(fes) # RHS is a linear form that contains the source.
-# f += -pulse * v * dx
-# f.Assemble()
+f = LinearForm(fes) # RHS is a linear form that contains the source.
+f += -pulse * v * dx
+f.Assemble()
 
-# # Create the grid function gfu that will contain our solution.
-# gfu = GridFunction(fes, name="u")
+# Create the grid function gfu that will contain our solution.
+gfu = GridFunction(fes, name="u")
 
-# # Solve the linear system.
-# gfu.vec.data = a.mat.Inverse() * f.vec
+# Solve the linear system.
+gfu.vec.data = a.mat.Inverse() * f.vec
 
-# # Draw the modulus of the complex solution on the mesh.
-# Draw(Norm(gfu),mesh,'mesh')
+# Draw the modulus of the complex solution on the mesh.
+Draw(Norm(gfu),mesh,'mesh',TriangleOutline=False)
 
 # # Saving the mesh as Gmsh2 format.
 # meshname = "Mesh_saving_test.msh"
