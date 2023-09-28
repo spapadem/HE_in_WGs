@@ -6,6 +6,8 @@ from scipy.io import savemat
 from scipy.interpolate import griddata
 import numpy as np
 import meshio
+import ngsolve.internal as ngsint
+
 
 # This function saves the solution that typically lives on all the DOFs, just on the mesh points. 
 # Useful for visualization purposes when using higher order elements, as the exported mesh seems
@@ -13,7 +15,6 @@ import meshio
 # and then interpolate on a regular grid.
 def ConvertSolutiononMesh(mesh,gfu):
     soln = np.zeros(mesh.nv,dtype='complex')
-   
     i = 0
     for p in mesh.ngmesh.Points():
         soln[i] = gfu(p[0],p[1])
@@ -101,7 +102,7 @@ u, v = fes.TnT() # Creating Test and Trial functions u, v.
 
 
 # Source present in the waveguide.
-f = 33. # Frequency in which the source emits its pulse.
+f = 73. # Frequency in which the source emits its pulse.
 omega = 2.*pi*f / c0 # Angular frequency.
 x_s=50. # Position of source in x-axis.
 y_s=100. # Position of source in y-axis.
@@ -126,6 +127,7 @@ gfu = GridFunction(fes, name="u")
 gfu.vec.data = a.mat.Inverse() * f.vec
 
 # Draw the modulus of the complex solution on the mesh.
+ngsint.viewoptions.drawoutline=0 # disable triangle outline when plotting.
 Draw(Norm(gfu),mesh,'mesh')
 
 # Saving the mesh as Gmsh2 format.
@@ -148,4 +150,6 @@ for p in mesh.ngmesh.Points():
      i = i + 1
 sol_on_grid = griddata(mesh_points, sol_on_mesh, (grid_x, grid_y), method='cubic') # Interpolate the solution from the mesh points into the regular grid points.
 
+if not os.path.exists(os.path.join(os.path.dirname(__file__), 'data')): # If the data folder doesn't exist.
+        os.mkdir(os.path.join(os.path.dirname(__file__), 'data'))       # Then this creates it.
 savemat("data/data_total.mat",{"u":sol_on_grid}) # Save a mat file of the solution on a regular grid.

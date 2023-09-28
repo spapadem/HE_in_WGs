@@ -17,7 +17,6 @@ ngsint.viewoptions.drawoutline=0 # disable triangle outline when plotting.
 # and then interpolate on a regular grid.
 def ConvertSolutiononMesh(mesh,gfu):
     soln = np.zeros(mesh.nv,dtype='complex')
-   
     i = 0
     for p in mesh.ngmesh.Points():
         soln[i] = gfu(p[0],p[1])
@@ -44,8 +43,8 @@ lambda_0 = c0/f0; # Reference wavelength. We use this to define all sizes with r
 
 # Waveguide characteristics
 Dc = 10*lambda_0 # Waveguide constant depth
-Dm  = 20*lambda_0 # Waveguide max depth
-Wc = 7*lambda_0 # Width with constant depth
+Dm = 20*lambda_0 # Waveguide max depth
+Wc =  7*lambda_0 # Width with constant depth
 Wm = 35*lambda_0 # Waveguide max width. (originally infinite but we have to truncate for computational purposes).
 PML_size = 4*lambda_0 # Length of the Perfectly Matched Layer (PML) that helps us truncate our computational domain.
 
@@ -145,5 +144,6 @@ Draw(Norm(gfu),mesh,'mesh',TriangleOutline=False)
 #      mesh_points[i,1] = p[1]
 #      i = i + 1
 # sol_on_grid = griddata(mesh_points, sol_on_mesh, (grid_x, grid_y), method='cubic') # Interpolate the solution from the mesh points into the regular grid points.
-
+# if not os.path.exists(os.path.join(os.path.dirname(__file__), 'data')): # If the data folder doesn't exist.
+#         os.mkdir(os.path.join(os.path.dirname(__file__), 'data'))       # Then this creates it.
 # savemat("data/data_total.mat",{"u":sol_on_grid}) # Save a mat file of the solution on a regular grid.
