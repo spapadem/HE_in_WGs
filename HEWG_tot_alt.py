@@ -42,7 +42,7 @@ lambda_0 = c0/f0; # Reference wavelength. We use this to define all sizes with r
 
 
 # Waveguide characteristics
-Dc = 10*lambda_0 # Waveguide constant depth
+Dc = 5*lambda_0 # Waveguide constant depth
 Dm = 20*lambda_0 # Waveguide max depth
 Wc =  7*lambda_0 # Width with constant depth
 Wm = 35*lambda_0 # Waveguide max width. (originally infinite but we have to truncate for computational purposes).
@@ -50,7 +50,7 @@ PML_size = 4*lambda_0 # Length of the Perfectly Matched Layer (PML) that helps u
 
 # Location and size of the scatterer.
 x_sc = 19*lambda_0 # Location in x-axis
-y_sc = 12*lambda_0 # Location in y-axis
+y_sc = 7*lambda_0 # Location in y-axis
 b = 1*lambda_0 # Size of the scatterer (radius)
 
 # Creating the waveguide geometry.
@@ -74,7 +74,7 @@ curves = [[["line",p1,p2],"top"],
 
 geo.AddRectangle((-PML_size,0),(0,Dc),leftdomain=2,bc="PMLL")
 geo.AddRectangle((Wm,0),(Wm+PML_size,Dm),leftdomain=3,bc="PMLR")
-#geo.AddCircle((x_sc,y_sc),2*b,leftdomain=0,rightdomain=1,bc="scatterer")
+geo.AddCircle((x_sc,y_sc),2*b,leftdomain=0,rightdomain=1,bc="scatterer")
 # help(geo.CreatePML)
 geo.SetMaterial(2,"PMLL")
 geo.SetMaterial(3,"PMLR")
@@ -100,8 +100,8 @@ u, v = fes.TnT() # Creating Test and Trial functions u, v.
 # # Source present in the waveguide.
 f = 73. # Frequency in which the source emits its pulse.
 omega = 2.*pi*f / c0 # Angular frequency.
-x_s=Wm-50. # Position of source in x-axis.
-y_s=100. # Position of source in y-axis.
+x_s= Wm-5*lambda_0 # Position of source in x-axis.
+y_s= 3*lambda_0 # Position of source in y-axis.
 pulse = exp(-(omega**2)*((x-x_s)*(x-x_s) + (y-y_s)*(y-y_s)))
 
 
@@ -123,8 +123,13 @@ gfu = GridFunction(fes, name="u")
 gfu.vec.data = a.mat.Inverse() * f.vec
 
 # Draw the modulus of the complex solution on the mesh.
-Draw(Norm(gfu),mesh,'mesh',TriangleOutline=False)
-
+# Draw(Norm(gfu),mesh,'mesh',)
+# scene = Draw(Norm(gfu),mesh,'mesh',autoscale=False,min=0,max=3,deformation=True)
+Draw(Norm(gfu),mesh,"mesh", deformation=True, settings = {"camera" :{"transformations" :
+                                    [{ "type": "rotateY", "angle": -90},
+                                     { "type": "rotateX", "angle": 0}]}},
+     min=0, max=5, autoscale=False)
+print('Ok2')
 # # Saving the mesh as Gmsh2 format.
 # meshname = "Mesh_saving_test.msh"
 # mesh.ngmesh.Export(meshname,"Gmsh2 Format") # Saving the mesh file. Not needed if you choose to interpolate to a regular grid later on.
