@@ -140,7 +140,7 @@ for n in range(Nr):
 data_name = "data/tot_f"+ str(frq) + ".mat"
 savemat(data_name,{"u":Presp}) # Save a mat file of the solution on a regular grid.
 
-data_name = "data/green_f"+ str(frq) + ".mat"
+data_name = "data/tot_f_mesh"+ str(frq) + ".mat"
 savemat(data_name,{"u":Gsave}) # Save a mat file of the Green's function on a regular grid.
 
 data_name = "data/mesh_points_tot.mat"

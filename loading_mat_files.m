@@ -1,12 +1,14 @@
-t = load('data/mesh_points.mat');
+t = load('data/mesh_points_inc.mat');
 p = t.u;
+t = load('data/mesh_points_tot.mat');
+pt = t.u;
 
 I = 0;
 fmin = 33;
 fmax = 81;
 Nf = 25;
 freqs = linspace(fmin, fmax, Nf);
-for  i = 1 : 3
+for  i = 1 : 10
     i
     % Load incident field.
     ui = load(['data/inc_f',num2str(freqs(i)),'.0.mat']);
@@ -21,6 +23,9 @@ for  i = 1 : 3
 
     Gf = load(['data/green_f',num2str(freqs(i)),'.0.mat']);
     G = Gf.u;
+
+    Gt = load(['data/tot_f_mesh',num2str(freqs(i)),'.0.mat']);
+    GT = Gt.u;
 % for m = 1 : size(usc,1)
 %     for n = 1 : size(usc,2)
 %         usc(m,n) = G(m,3000)*G(n,3000);
