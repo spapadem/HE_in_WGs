@@ -20,8 +20,8 @@ lambda_0 = c0/f0; # Reference wavelength. We use this to define all sizes with r
 
 
 # Waveguide characteristics
-Dc = 10*lambda_0 # Waveguide constant depth
-Dm = 10*lambda_0 # Waveguide max depth
+Dc = 5*lambda_0 # Waveguide constant depth
+Dm = 20*lambda_0 # Waveguide max depth
 Wc =  7*lambda_0 # Width with constant depth
 Wm = 35*lambda_0 # Waveguide max width. (originally infinite but we have to truncate for computational purposes).
 PML_size = 4*lambda_0 # Length of the Perfectly Matched Layer (PML) that helps us truncate our computational domain.
@@ -35,7 +35,7 @@ b = 1*lambda_0 # Size of the scatterer (radius)
 frq = 73. # Frequency in which the source emits its pulse.
 omega = 2.*np.pi*frq # Angular frequency.
 k = omega/c0 # wavenumber
-x_s= 3*lambda_0 # Position of source in x-axis.
+x_s= Wm-3*lambda_0 # Position of source in x-axis.
 Nr = 41
 h = Dm/(Nr-1)
 y_a = np.linspace(h, Dm-h, Nr)

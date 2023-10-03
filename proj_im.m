@@ -1,3 +1,6 @@
+close all
+clear all
+
 t = load('data/mesh_points_inc.mat');
 p = t.u;
 
@@ -17,7 +20,7 @@ Nr = 41;
 h = Dm/(Nr-1);
 y_a = linspace(h, Dm-h, Nr);
 
-for  i = 1 : 19
+for  i = 1 : Nf
     i
     % Load incident field.
     ui = load(['data/inc_f',num2str(freqs(i)),'.0.mat']);
