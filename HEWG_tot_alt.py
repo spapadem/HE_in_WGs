@@ -56,7 +56,7 @@ curves = [[["line",p1,p2],"top"],
 
 geo.AddRectangle((-PML_size,0),(0,Dc),leftdomain=2,bc="PMLL")
 geo.AddRectangle((Wm,0),(Wm+PML_size,Dm),leftdomain=3,bc="PMLR")
-geo.AddCircle((x_sc,y_sc),2*b,leftdomain=0,rightdomain=1,bc="scatterer")
+geo.AddCircle((x_sc,y_sc),b,leftdomain=0,rightdomain=1,bc="scatterer")
 # help(geo.CreatePML)
 geo.SetMaterial(2,"PMLL")
 geo.SetMaterial(3,"PMLR")

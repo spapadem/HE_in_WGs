@@ -122,8 +122,7 @@ for n in range(Nr):
 # Saving the solution to a .mat file.
     sol_on_mesh = ConvertSolutiononMesh(mesh,gfu) # Only keeping parts of the solution that are on mesh points and not all DOFs.
     grid_x, grid_y = np.meshgrid(x_s*np.ones((Nr,1)),y_a) # Creating the regular grid we interpolate over.
-    grid_x_g, grid_y_g = np.meshgrid(np.linspace(x_sc-3*lambda_0,x_sc+3*lambda_0,Nx),np.linspace(0, Dm, Ny)) # Creating the regular grid we interpolate over.
-
+    
 # Making the meshpoints from ngmesh into a numpy array, in order to be able to use them on the griddata command.
 # Kinda messy right now, quite possible doable in a better way.
     mesh_points =  np.zeros((mesh.nv,2))
@@ -133,7 +132,6 @@ for n in range(Nr):
         mesh_points[i,1] = p[1]
         i = i + 1
     sol_on_grid = griddata(mesh_points, sol_on_mesh, (x_s,y_a), method='cubic') # Interpolate the solution from the mesh points into the regular grid points.
-    green_on_grid = griddata(mesh_points, sol_on_mesh, (grid_x_g, grid_y_g), method='cubic') # Interpolate the solution from the mesh points into the regular grid points.
     if not os.path.exists(os.path.join(os.path.dirname(__file__), 'data')): # If the data folder doesn't exist.
         os.mkdir(os.path.join(os.path.dirname(__file__), 'data'))       # Then this creates it.
     Presp[n,:] = sol_on_grid

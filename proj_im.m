@@ -1,4 +1,4 @@
-t = load('data/mesh_points.mat');
+t = load('data/mesh_points_inc.mat');
 p = t.u;
 
 I = 0;
@@ -10,14 +10,14 @@ freqs = linspace(fmin, fmax, Nf);
 c0 = 1500;
 f0 = 75;
 lambda_0 = c0/f0;
-Dm = 10*lambda_0;
+Dm = 20*lambda_0;
 
 
 Nr = 41;
 h = Dm/(Nr-1);
 y_a = linspace(h, Dm-h, Nr);
-freqs = 73;
-for  i = 1 : 1
+
+for  i = 1 : 19
     i
     % Load incident field.
     ui = load(['data/inc_f',num2str(freqs(i)),'.0.mat']);
@@ -33,13 +33,8 @@ for  i = 1 : 1
     Gf = load(['data/green_f',num2str(freqs(i)),'.0.mat']);
     G = Gf.u;
 
-for m = 1 : size(usc,1)
-    for n = 1 : size(usc,2)
-        usc(m,n) = G(m,3000)*G(n,3000);
-    end
-end
-
-
+% scind = 6843;
+% usc = G(:,scind)*G(:,scind).';
     omega = 2.*pi*freqs(i);
     NPM = floor((2 * Dm * freqs(i))/c0);
     kn = omega/c0;
@@ -48,14 +43,14 @@ end
     lambdam = (m*pi / Dm).^2;
     betam = sqrt(kn*kn - lambdam);
     Dbinv = diag(betam);
-%     B = h*(VV'*VV);
-% 
-%     [Ua,Sa,Va] = svd(B);
-%     Dvinv = diag(1./diag(Sa));
-%     SJ = Dvinv*Ua'*VV';
-%     Shat  = SJ*usc*SJ';
-%     pproj = Ua*Shat*Ua';
-    pproj = h^2*Dbinv*VV'*usc*VV*Dbinv;
+    B = h*(VV'*VV);
+
+    [Ua,Sa,Va] = svd(B);
+    Dvinv = diag(1./diag(Sa));
+    SJ = Dvinv*Ua'*VV';
+    Shat  = SJ*usc*SJ';
+    pproj = Dbinv*Ua*Shat*Ua'*Dbinv;
+%     pproj = h^2*Dbinv*VV'*usc*VV*Dbinv;
     Gp = h*VV'*G;
 
 for m = 1 : NPM
@@ -65,13 +60,19 @@ for m = 1 : NPM
 end
 end
 figure(2)
-scatter(p(:,1),p(:,2),45,abs(I),'filled')
+scatter(p(:,1),p(:,2),35,abs(I),'filled')
 hold on
-circle([380,140],40,32,'w');
+% plot(p(scind,1),p(scind,2),'w*')
+circle([390,100],20,32,'w');
+
 axis equal
 axis image
+% axis([300 500 0 400])
 colormap jet
 colorbar
+set(gca,'Ydir','reverse')
 drawnow()
+shg
+pause(0.5)
 shg
 
