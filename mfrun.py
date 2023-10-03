@@ -10,8 +10,8 @@ for frq in frequencies:
     file = open('freq_used.py', 'w')
     file.write("frq= " + str(frq))
     file.close()
-    os.system("python3 HEWG_inc_vard.py")
-    os.system("python3 HEWG_tot_alt.py")
+    os.system("python3 HEWG_inc_var_depth.py")
+    os.system("python3 HEWG_tot_var_depth.py")
 # 
 # for frq in frequencies:
 #     print("Working on frequency "+ str(frq))
