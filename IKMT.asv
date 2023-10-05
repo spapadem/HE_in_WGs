@@ -1,11 +1,13 @@
 close all
 clear
 
+t = load('data/mesh_points_inc.mat');
+p = t.u;
+
 I = 0;
-fmin = 41;
-fmax = 89;
-h = 2;
-Nf = (fmax-fmin)/h + 1;
+fmin = 33;
+fmax = 81;
+Nf = 25;
 freqs = linspace(fmin, fmax, Nf);
 
 c0 = 1500;
@@ -13,21 +15,16 @@ f0 = 75;
 lambda_0 = c0/f0;
 Dm = 20*lambda_0;
 
-Nx = 201;
-Ny = 201;
-
-x_sc = 19.5*lambda_0;
-y_sc = 5*lambda_0;
-x = linspace(x_sc-4*lambda_0,x_sc+4*lambda_0,Nx);
-y = linspace(y_sc-4*lambda_0,y_sc+4*lambda_0,Ny);
-
-[X,Y] = meshgrid(x,y);
 
 Nr = 41;
 h = Dm/(Nr-1);
 y_a = linspace(h, Dm-h, Nr);
 
-for  i = 1 : 14
+indim_x = find(p(:,1) > 300 & p(:,1) < 500);
+indim_y = find(p(:,2) > 30 & p(:,2) < 180);
+indim = intersect(indim_x, indim_y);
+for  i = 1 : 13
+    i
     % Load incident field.
     ui = load(['data/inc_f',num2str(freqs(i)),'.0.mat']);
     uinc = ui.u;
@@ -42,6 +39,8 @@ for  i = 1 : 14
     Gf = load(['data/green_f',num2str(freqs(i)),'.0.mat']);
     G = Gf.u;
 
+% scind = 6843;
+% usc = G(:,scind)*G(:,scind).';
     omega = 2.*pi*freqs(i);
     NPM = floor((2 * Dm * freqs(i))/c0);
     kn = omega/c0;
@@ -62,25 +61,24 @@ for  i = 1 : 14
 
 for m = 1 : NPM
     for n = 1 : NPM
-        I = I + conj(pproj(m,n)).*Gp(m,:).*Gp(n,:);
+        I = I + conj(pproj(m,n)).*Gp(m,indim).*Gp(n,indim);
     end
 end
 end
-
 figure(2)
-imagesc(x,y,abs(reshape(I,Nx,Ny)))
+scatter(p(indim,1),p(indim,2),65,abs(I),'filled')
 hold on
-circle([390,100],20,32,'w');
+% plot(p(scind,1),p(scind,2),'w*')
+circle([390,100],40,32,'w');
+
 axis equal
 axis image
+% axis([300 500 0 400])
 colormap jet
 colorbar
 set(gca,'Ydir','reverse')
 drawnow()
 shg
-pause(0.1)
+pause(0.5)
 shg
-
-
-
 

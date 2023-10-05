@@ -38,7 +38,7 @@ k = omega/c0 # wavenumber
 x_s= Wm-3*lambda_0 # Position of source in x-axis.
 Nr = 41
 h = Dm/(Nr-1)
-y_a = np.linspace(h, Dm-h, Nr)
+y_a = np.linspace(h, Dc-h, Nr)
 
 
 Nx = 51 # Number of points in the regular grid, in the x-direction.
@@ -89,6 +89,7 @@ curves = [[["line",p1,p2],"top"],
 geo.AddRectangle((-PML_size,0),(0,Dc),leftdomain=2,bc="PMLL")
 geo.AddRectangle((Wm,0),(Wm+PML_size,Dm),leftdomain=3,bc="PMLR")
 # geo.AddCircle((x_sc,y_sc),2*b,leftdomain=0,rightdomain=1,bc="scatterer")
+# geo.AddCircle((x_sc+5*lambda_0,y_sc),2*b,leftdomain=0,rightdomain=1,bc="scatterer")
 # help(geo.CreatePML)
 geo.SetMaterial(2,"PMLL")
 geo.SetMaterial(3,"PMLR")
@@ -118,7 +119,7 @@ Gsave = np.zeros((Nr,mesh.nv),dtype='complex')
 n = 31
 print("n = "+ str(n+1) +" out of "+ str(Nr))
 y_s=  y_a[n] # Position of source in y-axis.
-r = 1 # Radius of source
+r = 5 # Radius of source
 alpha = log(10^6)/r**2
 pulse = sqrt(alpha/pi)*exp(-alpha*((x-x_s)*(x-x_s) + (y-y_s)*(y-y_s)))
 

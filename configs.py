@@ -27,12 +27,17 @@ x_s= Wm-3*lambda_0 # Position of source in x-axis.
 Nr = 41
 h = Dm/(Nr-1)
 y_a = np.linspace(h, Dm-h, Nr)
+r = 5 # Radius of source
+alpha = np.log(10^6)/r**2
 
 
-Nx = 51 # Number of points in the regular grid, in the x-direction.
-Ny = 71 # Number of points in the regular grid, in the y-direction.
+Nx = 201 # Number of points in the regular grid, in the x-direction.
+Ny = 201 # Number of points in the regular grid, in the y-direction.
+xg = np.linspace(x_sc-4*lambda_0,x_sc+4*lambda_0,Nx)
+yg = np.linspace(y_sc-4*lambda_0,y_sc+4*lambda_0,Ny)
 
-fmin = 33
-fmax = 81
-Nf = 25
+fmin = 41
+fmax = 89
+h = 2
+Nf = int((fmax-fmin)/h + 1)
 frequencies = np.linspace(fmin, fmax, Nf)

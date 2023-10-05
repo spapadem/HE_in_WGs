@@ -82,12 +82,11 @@ u, v = fes.TnT() # Creating Test and Trial functions u, v.
 # # Source present in the waveguide.
 # frq = 33. # Frequency in which the source emits its pulse.
 Presp = np.zeros((Nr,Nr),dtype='complex')
-Gsave = np.zeros((Nr,mesh.nv),dtype='complex')
+Gsave = np.zeros((Nr, Nx, Ny),dtype='complex')
+# Gimw  = np.zeros((Nx,Ny),dtype='complex')
 for n in range(Nr):
     print("n = "+ str(n+1) +" out of "+ str(Nr))
     y_s=  y_a[n] # Position of source in y-axis.
-    r = 1 # Radius of source
-    alpha = log(10^6)/r**2
     pulse = sqrt(alpha/pi)*exp(-alpha*((x-x_s)*(x-x_s) + (y-y_s)*(y-y_s)))
 
     #Draw(pulse, mesh,'mesh') # Optional drawing to see what the source looks like.
@@ -121,7 +120,7 @@ for n in range(Nr):
 
 # Saving the solution to a .mat file.
     sol_on_mesh = ConvertSolutiononMesh(mesh,gfu) # Only keeping parts of the solution that are on mesh points and not all DOFs.
-    # grid_x, grid_y = np.meshgrid(x_s*np.ones((Nr,1)),y_a) # Creating the regular grid we interpolate over.
+    grid_x, grid_y = np.meshgrid(xg, yg) # Creating the regular grid we interpolate over.
     
 # Making the meshpoints from ngmesh into a numpy array, in order to be able to use them on the griddata command.
 # Kinda messy right now, quite possible doable in a better way.
@@ -131,11 +130,13 @@ for n in range(Nr):
         mesh_points[i,0] = p[0]
         mesh_points[i,1] = p[1]
         i = i + 1
-    sol_on_grid = griddata(mesh_points, sol_on_mesh, (x_s,y_a), method='cubic') # Interpolate the solution from the mesh points into the regular grid points.
+    sol_on_array = griddata(mesh_points, sol_on_mesh, (x_s,y_a), method='cubic') # Interpolate the solution from the mesh points into the regular grid points.
+    sol_on_imw = griddata(mesh_points, sol_on_mesh, (grid_x,grid_y), method='cubic') # Interpolate the solution from the mesh points into the regular grid points.
     if not os.path.exists(os.path.join(os.path.dirname(__file__), 'data')): # If the data folder doesn't exist.
         os.mkdir(os.path.join(os.path.dirname(__file__), 'data'))       # Then this creates it.
-    Presp[n,:] = sol_on_grid
-    Gsave[n,:] = sol_on_mesh 
+    Presp[n,:] = sol_on_array
+    # Gsave[n,:] = sol_on_mesh 
+    Gsave[n,:,:] = sol_on_imw 
     
     
 data_name = "data/inc_f"+ str(frq) + ".mat"
@@ -144,5 +145,5 @@ savemat(data_name,{"u":Presp}) # Save a mat file of the solution on a regular gr
 data_name = "data/green_f"+ str(frq) + ".mat"
 savemat(data_name,{"u":Gsave}) # Save a mat file of the Green's function on a regular grid.
 
-data_name = "data/mesh_points_inc.mat"
-savemat(data_name,{"u":mesh_points})
+# data_name = "data/mesh_points_inc.mat"
+# savemat(data_name,{"u":mesh_points})

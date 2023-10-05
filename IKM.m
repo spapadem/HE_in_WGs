@@ -9,7 +9,7 @@ fmin = 33;
 fmax = 81;
 Nf = 25;
 freqs = linspace(fmin, fmax, Nf);
-for  i = 1 : Nf
+for  i = 1 : 2
     i
     % Load incident field.
     ui = load(['data/inc_f',num2str(freqs(i)),'.0.mat']);

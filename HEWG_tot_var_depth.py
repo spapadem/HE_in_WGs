@@ -83,8 +83,6 @@ Gsave = np.zeros((Nr,mesh.nv),dtype='complex')
 for n in range(Nr):
     print("n = "+ str(n+1) +" out of "+ str(Nr))
     y_s=  y_a[n] # Position of source in y-axis.
-    r = 1 # Radius of source
-    alpha = log(10^6)/r**2
     pulse = sqrt(alpha/pi)*exp(-alpha*((x-x_s)*(x-x_s) + (y-y_s)*(y-y_s)))
 
     #Draw(pulse, mesh,'mesh') # Optional drawing to see what the source looks like.
@@ -140,8 +138,8 @@ for n in range(Nr):
 data_name = "data/tot_f"+ str(frq) + ".mat"
 savemat(data_name,{"u":Presp}) # Save a mat file of the solution on a regular grid.
 
-data_name = "data/tot_f_mesh"+ str(frq) + ".mat"
-savemat(data_name,{"u":Gsave}) # Save a mat file of the Green's function on a regular grid.
+# data_name = "data/tot_f_mesh"+ str(frq) + ".mat"
+# savemat(data_name,{"u":Gsave}) # Save a mat file of the Green's function on a regular grid.
 
-data_name = "data/mesh_points_tot.mat"
-savemat(data_name,{"u":mesh_points})
+# data_name = "data/mesh_points_tot.mat"
+# savemat(data_name,{"u":mesh_points})
