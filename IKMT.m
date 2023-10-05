@@ -27,7 +27,7 @@ Nr = 41;
 h = Dm/(Nr-1);
 y_a = linspace(h, Dm-h, Nr);
 
-for  i = 1 : 14
+for  i = 1 : Nf
     % Load incident field.
     ui = load(['data/inc_f',num2str(freqs(i)),'.0.mat']);
     uinc = ui.u;
@@ -65,7 +65,7 @@ for m = 1 : NPM
         I = I + conj(pproj(m,n)).*Gp(m,:).*Gp(n,:);
     end
 end
-end
+
 
 figure(2)
 imagesc(x,y,abs(reshape(I,Nx,Ny)))
@@ -80,7 +80,7 @@ drawnow()
 shg
 pause(0.1)
 shg
-
+end
 
 
 

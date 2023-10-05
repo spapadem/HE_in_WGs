@@ -5,7 +5,7 @@ from configs import *
 import cmath
 
 
-[X,Y] = np.meshgrid(x,y)
+[X,Y] = np.meshgrid(xg,yg)
 I = np.zeros(Nx*Ny,dtype='complex')
 for  i in range(Nf):
     
@@ -38,10 +38,10 @@ for  i in range(Nf):
     pproj = Ua @ Shat @ np.transpose(Ua)
     Gp = h*np.transpose(VV) @ np.reshape(G,(Nr,Nx*Ny))
 
-for m  in range(NPM):
-    for n in range(NPM):
-        I = I + np.conj(pproj[m,n])*Gp[m,:]*Gp[n,:]
-
+    for m  in range(NPM):
+        for n in range(NPM):
+            I = I + np.conj(pproj[m,n])*Gp[m,:]*Gp[n,:]
+    
 plt.imshow(abs(np.reshape(I,(Nx,Ny))), cmap='jet', extent = [xg[0], xg[-1], yg[0], yg[-1]], aspect = 'equal')
+plt.gca().add_patch(plt.Circle((x_sc,y_sc),b,fill=False,color='w'))
 plt.show()
-print('Ok')
