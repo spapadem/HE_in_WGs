@@ -7,6 +7,7 @@ import cmath
 
 [X,Y] = np.meshgrid(xg,yg)
 I = np.zeros(Nx*Ny,dtype='complex')
+
 for  i in range(Nf):
     
     # Load incident field.
@@ -20,6 +21,8 @@ for  i in range(Nf):
 
     Gf = loadmat('data/green_f' + str(frequencies[i]) + '.mat')
     G = Gf['u']
+
+    # Dm = Dc
 
     omega = 2.*np.pi*frequencies[i]
     NPM = np.floor((2 * Dm * frequencies[i])/c0).astype(int)
@@ -43,5 +46,6 @@ for  i in range(Nf):
             I = I + np.conj(pproj[m,n])*Gp[m,:]*Gp[n,:]
     
 plt.imshow(abs(np.reshape(I,(Nx,Ny))), cmap='jet', extent = [xg[0], xg[-1], yg[0], yg[-1]], aspect = 'equal')
+plt.colorbar()
 plt.gca().add_patch(plt.Circle((x_sc,y_sc),b,fill=False,color='w'))
 plt.show()
