@@ -7,6 +7,7 @@ from scipy.interpolate import griddata
 import numpy as np
 import meshio
 from configs import *
+from tqdm import tqdm
 import ngsolve.internal as ngsint
 ngsint.viewoptions.drawoutline=0 # disable triangle outline when plotting.
 
@@ -66,7 +67,7 @@ mesh = Mesh(geo.GenerateMesh(maxh=5))
 pml_bnd = ["right","left"]
 mesh.Curve(3)
 #Draw(mesh)
-print("Ok")
+
 
 # # Letting the mesh know which are the PML layers. Notice that we essentially redefine the WGBOX, add the absorbing parameter (2j).
 # # We then tell the mesh which labels correspond to PMLs. In our case it's the PMLLEFT and PMLRIGHT faces we defined earlier.
@@ -82,8 +83,8 @@ u, v = fes.TnT() # Creating Test and Trial functions u, v.
 
 Presp = np.zeros((Nr,Nr),dtype='complex')
 Gsave = np.zeros((Nr,mesh.nv),dtype='complex')
-for n in range(Nr):
-    print("n = "+ str(n+1) +" out of "+ str(Nr))
+print("Generating total field")
+for n in tqdm(range(Nr)):
     y_s=  y_a[n] # Position of source in y-axis.
     pulse = sqrt(alpha/pi)*exp(-alpha*((x-x_s)*(x-x_s) + (y-y_s)*(y-y_s)))
 

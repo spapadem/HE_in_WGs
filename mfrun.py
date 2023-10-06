@@ -19,11 +19,3 @@ for frq in frequencies:
         os.system("python HEWG_tot_var_depth.py")
     else:
         print('You are using Mac, you need to fill this in') # Don't have a Mac to test on. Need to fill.
-# 
-# for frq in frequencies:
-#     print("Working on frequency "+ str(frq))
-#     file = open('freq_used.py', 'w')
-#     file.write("frq= "+str(frq))
-#     file.close()
-    # os.system("python HEWG_inc_vard.py")
- 
