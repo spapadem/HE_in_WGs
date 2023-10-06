@@ -34,9 +34,9 @@ b = 1*lambda_0 # Size of the scatterer (radius)
 frq = 73. # Frequency in which the source emits its pulse.
 omega = 2.*np.pi*frq # Angular frequency.
 k = omega/c0 # wavenumber
-x_s= Wm-3*lambda_0 # Position of source in x-axis.
-y_s=  10*lambda_0 # Position of source in y-axis.
-r = 1 # Radius of source
+x_s= 3*lambda_0 # Position of source in x-axis.
+y_s= 4*lambda_0 # Position of source in y-axis.
+r = 5 # Radius of source
 alpha = log(10^6)/r**2
 pulse = sqrt(alpha/pi)*exp(-alpha*((x-x_s)*(x-x_s) + (y-y_s)*(y-y_s)))
 
