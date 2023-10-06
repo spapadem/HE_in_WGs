@@ -6,7 +6,6 @@ from scipy.io import savemat
 from scipy.interpolate import griddata
 import numpy as np
 import meshio
-# from configs import *
 import ngsolve.internal as ngsint
 ngsint.viewoptions.drawoutline=0 # disable triangle outline when plotting.
 
@@ -36,10 +35,10 @@ frq = 73. # Frequency in which the source emits its pulse.
 omega = 2.*np.pi*frq # Angular frequency.
 k = omega/c0 # wavenumber
 x_s= Wm-3*lambda_0 # Position of source in x-axis.
-Nr = 41
-h = Dm/(Nr-1)
-y_a = np.linspace(h, Dc-h, Nr)
-
+y_s=  10*lambda_0 # Position of source in y-axis.
+r = 1 # Radius of source
+alpha = log(10^6)/r**2
+pulse = sqrt(alpha/pi)*exp(-alpha*((x-x_s)*(x-x_s) + (y-y_s)*(y-y_s)))
 
 Nx = 51 # Number of points in the regular grid, in the x-direction.
 Ny = 71 # Number of points in the regular grid, in the y-direction.
@@ -89,15 +88,12 @@ curves = [[["line",p1,p2],"top"],
           [["line",p9,p1],"left"]]
 [geo.Append(c,bc=bc) for c,bc in curves]
 
-geo.AddRectangle((-PML_size,0),(0,Dc),leftdomain=2,bc="PMLL")
-geo.AddRectangle((Wm,0),(Wm+PML_size,Dm),leftdomain=3,bc="PMLR")
-# geo.AddCircle((x_sc,y_sc),2*b,leftdomain=0,rightdomain=1,bc="scatterer")
-# geo.AddCircle((x_sc+5*lambda_0,y_sc),2*b,leftdomain=0,rightdomain=1,bc="scatterer")
-# help(geo.CreatePML)
+geo.AddRectangle((-PML_size,0),(0,Dc),leftdomain=2,bc="PMLL") # Add left PML rectangle.
+geo.AddRectangle((Wm,0),(Wm+PML_size,Dm),leftdomain=3,bc="PMLR") # Add right PML rectangle.
+geo.AddCircle((x_sc,y_sc),2*b,leftdomain=0,rightdomain=1,bc="scatterer") # Add scatterer in the domain.
 geo.SetMaterial(2,"PMLL")
 geo.SetMaterial(3,"PMLR")
 mesh = Mesh(geo.GenerateMesh(maxh=5))
-pml_bnd = ["right","left"]
 mesh.Curve(3)
 #Draw(mesh)
 print("Ok")
@@ -113,18 +109,6 @@ mesh.SetPML(pml.Cartesian((0,0), (Wm,Dm), 2j),"PMLL|PMLR")
 fes = H1(mesh, order=2, complex=True, dirichlet='top|bottom|scatterer') 
 
 u, v = fes.TnT() # Creating Test and Trial functions u, v.
-
-
-# # Source present in the waveguide.
-# frq = 33. # Frequency in which the source emits its pulse.
-Presp = np.zeros((Nr,Nr),dtype='complex')
-Gsave = np.zeros((Nr,mesh.nv),dtype='complex')
-n = 31
-print("n = "+ str(n+1) +" out of "+ str(Nr))
-y_s=  y_a[n] # Position of source in y-axis.
-r = 5 # Radius of source
-alpha = log(10^6)/r**2
-pulse = sqrt(alpha/pi)*exp(-alpha*((x-x_s)*(x-x_s) + (y-y_s)*(y-y_s)))
 
 Draw(pulse, mesh,'mesh') # Optional drawing to see what the source looks like.
 
@@ -145,12 +129,7 @@ gfu.vec.data = a.mat.Inverse() * f.vec
 
     # Draw the modulus of the complex solution on the mesh.
 Draw(Norm(gfu),mesh,'mesh',)
-    # scene = Draw(Norm(gfu),mesh,'mesh',autoscale=False,min=0,max=3,deformation=True)
-#     Draw(Norm(gfu),mesh,"mesh", deformation=True, settings = {"camera" :{"transformations" :
-#                                     [{ "type": "rotateY", "angle": -90},
-#                                      { "type": "rotateX", "angle": 0}]}},
-#      min=0, max=5, autoscale=False)
-# print('Ok2')
+   
 # # Saving the mesh as Gmsh2 format.
 # meshname = "Mesh_saving_test.msh"
 # mesh.ngmesh.Export(meshname,"Gmsh2 Format") # Saving the mesh file. Not needed if you choose to interpolate to a regular grid later on.

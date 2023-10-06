@@ -57,7 +57,7 @@ curves = [[["line",p1,p2],"top"],
           [["line",p8,p9],"bottom"],
           [["line",p9,p1],"left"]]
 [geo.Append(c,bc=bc) for c,bc in curves]
-
+α
 geo.AddRectangle((-PML_size,0),(0,Dc),leftdomain=2,bc="PMLL")
 geo.AddRectangle((Wm,0),(Wm+PML_size,Dm),leftdomain=3,bc="PMLR")
 geo.SetMaterial(2,"PMLL")
