@@ -25,15 +25,19 @@ def ConvertSolutiononMesh(mesh,gfu):
     return soln
 
 # We work on an infinite waveguide, which means it is bounded on top and bottom and the solution is outgoing on the left and right.
-# Specifically, we will consider an infinite strip waveguide, with flat top and bottom boundaries. A waveguide with a varying bottom
-# will be implemented in a future project.
 #
 #           -----------------------------------------------------------------------------
 #                                                               __
 #                                                              /  \
 #                                                              \__/
 #
-#           -----------------------------------------------------------------------------
+#           ---------------------------
+#                                       \
+#                                        \                   
+#                                         \
+#                                          \
+#                                           \
+#                                            --------------------------------------------
 
 
 # Creating the waveguide geometry.

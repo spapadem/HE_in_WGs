@@ -24,16 +24,22 @@ def ConvertSolutiononMesh(mesh,gfu):
         i = i + 1
     return soln
 
+
 # We work on an infinite waveguide, which means it is bounded on top and bottom and the solution is outgoing on the left and right.
-# Specifically, we will consider an infinite strip waveguide, with flat top and bottom boundaries. A waveguide with a varying bottom
-# will be implemented in a future project.
 #
 #           -----------------------------------------------------------------------------
-#                                                               __
-#                                                              /  \
-#                                                              \__/
+#                                                             
+#                                                             
+#                                                        
 #
-#           -----------------------------------------------------------------------------
+#           ---------------------------
+#                                       \
+#                                        \                   
+#                                         \
+#                                          \
+#                                           \
+#                                            --------------------------------------------
+
 
 
 # Creating the waveguide geometry.
@@ -57,13 +63,12 @@ curves = [[["line",p1,p2],"top"],
           [["line",p8,p9],"bottom"],
           [["line",p9,p1],"left"]]
 [geo.Append(c,bc=bc) for c,bc in curves]
-α
-geo.AddRectangle((-PML_size,0),(0,Dc),leftdomain=2,bc="PMLL")
-geo.AddRectangle((Wm,0),(Wm+PML_size,Dm),leftdomain=3,bc="PMLR")
+
+geo.AddRectangle((-PML_size,0),(0,Dc),leftdomain=2,bc="PMLL") # Add left PML rectangle.
+geo.AddRectangle((Wm,0),(Wm+PML_size,Dm),leftdomain=3,bc="PMLR") # Add right PML rectangle.
 geo.SetMaterial(2,"PMLL")
 geo.SetMaterial(3,"PMLR")
 mesh = Mesh(geo.GenerateMesh(maxh=5))
-pml_bnd = ["right","left"]
 mesh.Curve(3)
 #Draw(mesh)
 
