@@ -8,9 +8,9 @@ lambda_0 = c0/f0; # Reference wavelength. We use this to define all sizes with r
 
 
 # Waveguide characteristics
-Dc = 5*lambda_0 # Waveguide constant depth
+Dc = 7*lambda_0 # Waveguide constant depth
 Dm = 20*lambda_0 # Waveguide max depth
-Wc =  7*lambda_0 # Width with constant depth
+Wc =  10*lambda_0 # Width with constant depth
 Wm = 35*lambda_0 # Waveguide max width. (originally infinite but we have to truncate for computational purposes).
 PML_size = 4*lambda_0 # Length of the Perfectly Matched Layer (PML) that helps us truncate our computational domain.
 

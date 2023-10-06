@@ -39,13 +39,19 @@ for  i in range(Nf):
     SJ = Dvinv @ np.transpose(Ua) @ np.transpose(VV)
     Shat  = SJ @ usc @ np.transpose(SJ)
     pproj = Ua @ Shat @ np.transpose(Ua)
+
+    # J = 3
+    # U,S,V = np.linalg.svd(pproj)
+    # pproj = S[J] * np.reshape(U[:,J],(NPM,1)) @ np.transpose(np.reshape(U[:,J],(NPM,1)))
+
     Gp = h*np.transpose(VV) @ np.reshape(G,(Nr,Nx*Ny))
 
     for m  in range(NPM):
         for n in range(NPM):
             I = I + np.conj(pproj[m,n])*Gp[m,:]*Gp[n,:]
-    
-plt.imshow(abs(np.reshape(I,(Nx,Ny))), cmap='jet', extent = [xg[0], xg[-1], yg[0], yg[-1]], aspect = 'equal')
+
+I = I/np.max(abs(I))
+plt.imshow(abs(np.reshape(I,(Nx,Ny))), cmap='jet', extent = [xg[0], xg[-1], yg[0], yg[-1]], aspect = 'equal',vmin = 0.4,vmax=1)
 plt.colorbar()
 plt.gca().add_patch(plt.Circle((x_sc,y_sc),b,fill=False,color='w'))
 plt.show()

@@ -20,9 +20,9 @@ lambda_0 = c0/f0; # Reference wavelength. We use this to define all sizes with r
 
 
 # Waveguide characteristics
-Dc = 5*lambda_0 # Waveguide constant depth
+Dc = 7*lambda_0 # Waveguide constant depth
 Dm = 20*lambda_0 # Waveguide max depth
-Wc =  7*lambda_0 # Width with constant depth
+Wc =  10*lambda_0 # Width with constant depth
 Wm = 35*lambda_0 # Waveguide max width. (originally infinite but we have to truncate for computational purposes).
 PML_size = 4*lambda_0 # Length of the Perfectly Matched Layer (PML) that helps us truncate our computational domain.
 
@@ -73,17 +73,20 @@ geo = SplineGeometry()
 pnts =[(0,0), #1
        (Wm,0), #2
        (Wm,Dm),  #3
-       (Wm-5*lambda_0,Dm), #4
-       (0.5*(Wc+Wm-5*lambda_0), (Dc+Dm)/2), #5
-       (Wc,Dc), #6
-       (0,Dc)] #7
-p1,p2,p3,p4,p5,p6,p7 = [geo.AppendPoint(*pnt) for pnt in pnts]
+       (Wm-4*lambda_0,Dm), #4
+       (Wm-7*lambda_0,Dm), #5
+       (0.5*(Wc+Wm-5*lambda_0), (Dc+Dm)/2), #6
+       (Wc,Dc), #7
+       (Wc-2*lambda_0,Dc), #8
+       (0,Dc)] #9
+p1,p2,p3,p4,p5,p6,p7,p8,p9 = [geo.AppendPoint(*pnt) for pnt in pnts]
 curves = [[["line",p1,p2],"top"],
           [["line",p2,p3],"right"],
           [["line",p3,p4],"bottom"],
           [["spline3",p4,p5,p6],"bottom"],
-          [["line",p6,p7],"bottom"],
-          [["line",p7,p1],"left"]]
+          [["spline3",p6,p7,p8],"bottom"],
+          [["line",p8,p9],"bottom"],
+          [["line",p9,p1],"left"]]
 [geo.Append(c,bc=bc) for c,bc in curves]
 
 geo.AddRectangle((-PML_size,0),(0,Dc),leftdomain=2,bc="PMLL")

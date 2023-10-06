@@ -41,23 +41,24 @@ geo = SplineGeometry()
 pnts =[(0,0), #1
        (Wm,0), #2
        (Wm,Dm),  #3
-       (Wm-5*lambda_0,Dm), #4
-       (0.5*(Wc+Wm-5*lambda_0), (Dc+Dm)/2), #5
-       (Wc,Dc), #6
-       (0,Dc)] #7
-p1,p2,p3,p4,p5,p6,p7 = [geo.AppendPoint(*pnt) for pnt in pnts]
+       (Wm-4*lambda_0,Dm), #4
+       (Wm-7*lambda_0,Dm), #5
+       (0.5*(Wc+Wm-5*lambda_0), (Dc+Dm)/2), #6
+       (Wc,Dc), #7
+       (Wc-2*lambda_0,Dc), #8
+       (0,Dc)] #9
+p1,p2,p3,p4,p5,p6,p7,p8,p9 = [geo.AppendPoint(*pnt) for pnt in pnts]
 curves = [[["line",p1,p2],"top"],
           [["line",p2,p3],"right"],
           [["line",p3,p4],"bottom"],
           [["spline3",p4,p5,p6],"bottom"],
-          [["line",p6,p7],"bottom"],
-          [["line",p7,p1],"left"]]
+          [["spline3",p6,p7,p8],"bottom"],
+          [["line",p8,p9],"bottom"],
+          [["line",p9,p1],"left"]]
 [geo.Append(c,bc=bc) for c,bc in curves]
 
 geo.AddRectangle((-PML_size,0),(0,Dc),leftdomain=2,bc="PMLL")
 geo.AddRectangle((Wm,0),(Wm+PML_size,Dm),leftdomain=3,bc="PMLR")
-# geo.AddCircle((x_sc,y_sc),2*b,leftdomain=0,rightdomain=1,bc="scatterer")
-# help(geo.CreatePML)
 geo.SetMaterial(2,"PMLL")
 geo.SetMaterial(3,"PMLR")
 mesh = Mesh(geo.GenerateMesh(maxh=5))
