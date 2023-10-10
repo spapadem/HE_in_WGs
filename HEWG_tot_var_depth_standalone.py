@@ -34,8 +34,8 @@ b = 1*lambda_0 # Size of the scatterer (radius)
 frq = 73. # Frequency in which the source emits its pulse.
 omega = 2.*np.pi*frq # Angular frequency.
 k = omega/c0 # wavenumber
-x_s= 3*lambda_0 # Position of source in x-axis.
-y_s= 4*lambda_0 # Position of source in y-axis.
+x_s= Wm-3*lambda_0 # Position of source in x-axis.
+y_s=  10*lambda_0 # Position of source in y-axis.
 r = 5 # Radius of source
 alpha = log(10^6)/r**2
 pulse = sqrt(alpha/pi)*exp(-alpha*((x-x_s)*(x-x_s) + (y-y_s)*(y-y_s)))
@@ -95,7 +95,7 @@ curves = [[["line",p1,p2],"top"],
 
 geo.AddRectangle((-PML_size,0),(0,Dc),leftdomain=2,bc="PMLL") # Add left PML rectangle.
 geo.AddRectangle((Wm,0),(Wm+PML_size,Dm),leftdomain=3,bc="PMLR") # Add right PML rectangle.
-geo.AddCircle((x_sc,y_sc),2*b,leftdomain=0,rightdomain=1,bc="scatterer") # Add scatterer in the domain.
+geo.AddCircle((x_sc,y_sc),b,leftdomain=0,rightdomain=1,bc="scatterer") # Add scatterer in the domain.
 geo.SetMaterial(2,"PMLL")
 geo.SetMaterial(3,"PMLR")
 mesh = Mesh(geo.GenerateMesh(maxh=5))

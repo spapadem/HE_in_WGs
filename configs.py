@@ -16,7 +16,7 @@ PML_size = 4*lambda_0 # Length of the Perfectly Matched Layer (PML) that helps u
 
 # Location and size of the scatterer.
 x_sc = 19.5*lambda_0 # Location in x-axis
-y_sc = 5*lambda_0 # Location in y-axis
+y_sc = 8*lambda_0 # Location in y-axis
 b = 1*lambda_0 # Size of the scatterer (radius)
 
 # # Source present in the waveguide.
