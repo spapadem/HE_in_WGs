@@ -15,8 +15,8 @@ Wm = 35*lambda_0 # Waveguide max width. (originally infinite but we have to trun
 PML_size = 4*lambda_0 # Length of the Perfectly Matched Layer (PML) that helps us truncate our computational domain.
 
 # Location and size of the scatterer.
-x_sc = 19.5*lambda_0 # Location in x-axis
-y_sc = 8*lambda_0 # Location in y-axis
+x_sc = 20*lambda_0 # Location in x-axis
+y_sc = 3.5*lambda_0 # Location in y-axis
 b = 1*lambda_0 # Size of the scatterer (radius)
 
 # # Source present in the waveguide.
@@ -33,8 +33,8 @@ alpha = np.log(10^6)/r**2
 
 Nx = 201 # Number of points in the regular grid, in the x-direction.
 Ny = 201 # Number of points in the regular grid, in the y-direction.
-xg = np.linspace(x_sc-4*lambda_0,x_sc+4*lambda_0,Nx)
-yg = np.linspace(y_sc-4*lambda_0,y_sc+4*lambda_0,Ny)
+xg = np.linspace(x_sc-3*lambda_0,x_sc+3*lambda_0,Nx)
+yg = np.linspace(y_sc-3*lambda_0,y_sc+3*lambda_0,Ny)
 
 fmin = 41
 fmax = 89

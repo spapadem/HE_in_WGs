@@ -1,7 +1,6 @@
 # Preamble, loading necessary packages
 import numpy as np
 from configs import *
-# import HEWG_inc_vard
 import os
 import platform
 
@@ -12,7 +11,7 @@ for frq in frequencies:
     file.write("frq= " + str(frq))
     file.close()
     if (platform.system() == 'Linux'):
-        # os.system("python3 HEWG_inc_var_depth.py")
+        os.system("python3 HEWG_inc_var_depth.py")
         os.system("python3 HEWG_tot_var_depth.py")
     elif (platform.system() == 'Windows'):
         os.system("python HEWG_inc_var_depth.py")
