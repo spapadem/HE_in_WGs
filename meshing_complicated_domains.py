@@ -17,7 +17,7 @@ Nbn = 151 # Number of nodes on the boundary.
 # Parametric equation of the shape.
 t = np.linspace(0,2*pi,Nbn)
 t = t[0:-1]
-n = 1.5 
+n = 0 
 rvals = np.abs(np.cos(n*t))**(np.sin(2*n*t))
 
 # Calculate x and y (polar).
@@ -42,7 +42,7 @@ curves.append([["line",pp[-1],pp[0]],"round"])
 [geo.Append(c,bc=bc) for c,bc in curves]
 
 # Generate the mesh.
-mesh = Mesh(geo.GenerateMesh(maxh=0.1))
+mesh = Mesh(geo.GenerateMesh(maxh=0.05))
 mesh.Curve(3)
 Draw(mesh)
 print("Ok")
