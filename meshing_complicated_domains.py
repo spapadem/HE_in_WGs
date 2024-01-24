@@ -12,12 +12,12 @@ import ngsolve.internal as ngsint
 
 
 
-Nbn = 151 # Number of nodes on the boundary.
+Nbn = 2*151 # Number of nodes on the boundary.
 
 # Parametric equation of the shape.
 t = np.linspace(0,2*pi,Nbn)
 t = t[0:-1]
-n = 1.5 
+n = 3.5
 rvals = np.abs(np.cos(n*t))**(np.sin(2*n*t))
 
 # Calculate x and y (polar).
