@@ -109,7 +109,7 @@ y_s=100. # Position of source in y-axis.
 pulse = exp(-(omega**2)*((x-x_s)*(x-x_s) + (y-y_s)*(y-y_s)))
 
 
-# Draw(pulse, mesh,'mesh') # Optional drawing to see what the source looks like.
+Draw(pulse, mesh,'mesh') # Optional drawing to see what the source looks like.
 
 # Creating the weak form of the Helmholtz equation -Du - k^2 u = f
 a = BilinearForm(fes, symmetric=True) # Setting a as a bilinear form
@@ -127,8 +127,8 @@ gfu = GridFunction(fes, name="u")
 gfu.vec.data = a.mat.Inverse() * f.vec
 
 # Draw the modulus of the complex solution on the mesh.
-ngsint.viewoptions.drawoutline=0 # disable triangle outline when plotting.
-Draw(Norm(gfu),mesh,'mesh')
+# ngsint.viewoptions.drawoutline=0 # disable triangle outline when plotting.
+# Draw(Norm(gfu),mesh,'mesh')
 
 # Saving the mesh as Gmsh2 format.
 meshname = "Mesh_saving_test.msh"
