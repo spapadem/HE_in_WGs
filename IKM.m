@@ -12,20 +12,20 @@ freqs = linspace(fmin, fmax, Nf);
 for  i = 1 : 2
     i
     % Load incident field.
-    ui = load(['data/inc_f',num2str(freqs(i)),'.0.mat']);
+    ui = load(['data/Right_array/inc_f',num2str(freqs(i)),'.0.mat']);
     uinc = ui.u;
 
 %     Load total field.
-    ut = load(['data/tot_f',num2str(freqs(i)),'.0.mat']);
+    ut = load(['data/Right_array/tot_f',num2str(freqs(i)),'.0.mat']);
     utot = ut.u;
 
     % Create scattered field.
     usc = utot - uinc;
 
-    Gf = load(['data/green_f',num2str(freqs(i)),'.0.mat']);
+    Gf = load(['data/Right_array/green_f',num2str(freqs(i)),'.0.mat']);
     G = Gf.u;
 
-    Gt = load(['data/tot_f_mesh',num2str(freqs(i)),'.0.mat']);
+    Gt = load(['data/Right_array/tot_f_mesh',num2str(freqs(i)),'.0.mat']);
     GT = Gt.u;
 % for m = 1 : size(usc,1)
 %     for n = 1 : size(usc,2)

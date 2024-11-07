@@ -8,7 +8,7 @@ import numpy as np
 import meshio
 import ngsolve.internal as ngsint
 ngsint.viewoptions.drawoutline=0 # disable triangle outline when plotting.
-
+import netgen.gui
 import numpy as np
 # from freq_used import *
 ## Problem setup.
@@ -34,8 +34,8 @@ b = 1*lambda_0 # Size of the scatterer (radius)
 frq = 73. # Frequency in which the source emits its pulse.
 omega = 2.*np.pi*frq # Angular frequency.
 k = omega/c0 # wavenumber
-x_s= Wm-3*lambda_0 # Position of source in x-axis.
-y_s=  10*lambda_0 # Position of source in y-axis.
+x_s= 1*lambda_0 # Position of source in x-axis.
+y_s=  5*lambda_0 # Position of source in y-axis.
 r = 5 # Radius of source
 alpha = log(10^6)/r**2
 pulse = sqrt(alpha/pi)*exp(-alpha*((x-x_s)*(x-x_s) + (y-y_s)*(y-y_s)))
@@ -100,7 +100,7 @@ geo.SetMaterial(2,"PMLL")
 geo.SetMaterial(3,"PMLR")
 mesh = Mesh(geo.GenerateMesh(maxh=5))
 mesh.Curve(3)
-#Draw(mesh)
+# Draw(mesh)
 print("Ok")
 
 # # Letting the mesh know which are the PML layers. Notice that we essentially redefine the WGBOX, add the absorbing parameter (2j).

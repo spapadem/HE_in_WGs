@@ -101,7 +101,7 @@ u, v = fes.TnT() # Creating Test and Trial functions u, v.
 f = 73. # Frequency in which the source emits its pulse.
 omega = 2.*pi*f / c0 # Angular frequency.
 x_s=50. # Position of source in x-axis.
-y_s=100. # Position of source in y-axis.
+y_s=30. # Position of source in y-axis.
 pulse = exp(-(omega**2)*((x-x_s)*(x-x_s) + (y-y_s)*(y-y_s)))
 
 
