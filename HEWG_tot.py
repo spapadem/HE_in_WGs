@@ -46,8 +46,8 @@ PML_size = 2*lambda_0 # Length of the Perfectly Matched Layer (PML) that helps u
 
 # Location and size of the scatterer.
 x_sc = 19*lambda_0 # Location in x-axis
-y_sc = 5*lambda_0 # Location in y-axis
-b = 1*lambda_0 # Size of the scatterer (radius)
+y_sc = 6*lambda_0 # Location in y-axis
+b = 3*lambda_0 # Size of the scatterer (radius)
 
 # Creating the waveguide geometry.
 WG = MoveTo(0,0).Rectangle(W,D).Circle(x_sc, y_sc, b).Reverse().Face() # Creating the rectangle of size WxD, and a circular scatterer at (x_sc,y_sc), of size b.
@@ -102,10 +102,10 @@ u, v = fes.TnT() # Creating Test and Trial functions u, v.
 
 
 # Source present in the waveguide.
-f = 73. # Frequency in which the source emits its pulse.
+f = 173. # Frequency in which the source emits its pulse.
 omega = 2.*pi*f / c0 # Angular frequency.
 x_s=50. # Position of source in x-axis.
-y_s=100. # Position of source in y-axis.
+y_s=30. # Position of source in y-axis.
 pulse = exp(-(omega**2)*((x-x_s)*(x-x_s) + (y-y_s)*(y-y_s)))
 
 
@@ -127,8 +127,8 @@ gfu = GridFunction(fes, name="u")
 gfu.vec.data = a.mat.Inverse() * f.vec
 
 # Draw the modulus of the complex solution on the mesh.
-# ngsint.viewoptions.drawoutline=0 # disable triangle outline when plotting.
-# Draw(Norm(gfu),mesh,'mesh')
+ngsint.viewoptions.drawoutline=0 # disable triangle outline when plotting.
+Draw(Norm(gfu),mesh,'mesh')
 
 # Saving the mesh as Gmsh2 format.
 meshname = "Mesh_saving_test.msh"

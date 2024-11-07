@@ -1,6 +1,16 @@
 close all
 clear
 
+
+filename = ['mesh_inc_var_depth'];
+
+gmsh_to_fem(filename)
+nodes = load([filename,'_nodes.txt']);
+triangles = load([filename,'_elements.txt']);
+
+
+
+
 I = 0;
 fmin = 41;
 fmax = 89;
@@ -58,7 +68,7 @@ for  i = 1 : Nf
     Shat  = SJ*usc*SJ';
     pproj = Ua*Shat*Ua';
 %     pproj = h^2*Dbinv*VV'*usc*VV*Dbinv;
-    Gp = h*VV'*reshape(G,Nr,Nx*Ny);
+    Gp = h*VV'*G;
 
 for m = 1 : NPM
     for n = 1 : NPM
@@ -68,7 +78,16 @@ end
 
 
 figure(2)
-imagesc(x,y,abs(reshape(I,Nx,Ny)))
+trisurf(triangles,nodes(:,1),nodes(:,2),abs(I),linestyle="none");
+shading interp
+% title('TPs','interpreter','latex','FontSize',16)
+colorbar
+axis equal; axis image;
+colormap jet
+view([0 0 90])
+drawnow;
+shg
+% imagesc(x,y,abs(reshape(I,Nx,Ny)))
 hold on
 circle([390,100],20,32,'w');
 axis equal

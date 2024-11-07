@@ -89,7 +89,7 @@ u, v = fes.TnT() # Creating Test and Trial functions u, v.
 # # Source present in the waveguide.
 # frq = 33. # Frequency in which the source emits its pulse.
 Presp = np.zeros((Nr,Nr),dtype='complex')
-Gsave = np.zeros((Nr, Nx, Ny),dtype='complex')
+Gsave = np.zeros((Nr, mesh.nv),dtype='complex')
 # Gimw  = np.zeros((Nx,Ny),dtype='complex')
 print("Generating incident field")
 for n in tqdm(range(Nr)):
@@ -121,9 +121,9 @@ for n in tqdm(range(Nr)):
 #                                      { "type": "rotateX", "angle": 0}]}},
 #      min=0, max=5, autoscale=False)
 # print('Ok2')
-# # Saving the mesh as Gmsh2 format.
-# meshname = "Mesh_saving_test.msh"
-# mesh.ngmesh.Export(meshname,"Gmsh2 Format") # Saving the mesh file. Not needed if you choose to interpolate to a regular grid later on.
+    # Saving the mesh as Gmsh2 format.
+    meshname = "mesh_inc_var_depth.msh"
+    mesh.ngmesh.Export(meshname,"Gmsh2 Format") # Saving the mesh file. Not needed if you choose to interpolate to a regular grid later on.
 
 # Saving the solution to a .mat file.
     sol_on_mesh = ConvertSolutiononMesh(mesh,gfu) # Only keeping parts of the solution that are on mesh points and not all DOFs.
@@ -138,12 +138,12 @@ for n in tqdm(range(Nr)):
         mesh_points[i,1] = p[1]
         i = i + 1
     sol_on_array = griddata(mesh_points, sol_on_mesh, (x_s,y_a), method='cubic') # Interpolate the solution from the mesh points into the regular grid points.
-    sol_on_imw = griddata(mesh_points, sol_on_mesh, (grid_x,grid_y), method='cubic') # Interpolate the solution from the mesh points into the regular grid points.
+    # sol_on_imw = griddata(mesh_points, sol_on_mesh, (grid_x,grid_y), method='cubic') # Interpolate the solution from the mesh points into the regular grid points.
     if not os.path.exists(os.path.join(os.path.dirname(__file__), 'data')): # If the data folder doesn't exist.
         os.mkdir(os.path.join(os.path.dirname(__file__), 'data'))       # Then this creates it.
     Presp[n,:] = sol_on_array
-    # Gsave[n,:] = sol_on_mesh 
-    Gsave[n,:,:] = sol_on_imw 
+    Gsave[n,:] = sol_on_mesh 
+    # Gsave[n,:,:] = sol_on_imw 
     
     
 data_name = "data/inc_f"+ str(frq) + ".mat"
@@ -152,5 +152,5 @@ savemat(data_name,{"u":Presp}) # Save a mat file of the solution on a regular gr
 data_name = "data/green_f"+ str(frq) + ".mat"
 savemat(data_name,{"u":Gsave}) # Save a mat file of the Green's function on a regular grid.
 
-# data_name = "data/mesh_points_inc.mat"
-# savemat(data_name,{"u":mesh_points})
+data_name = "data/mesh_points_inc.mat"
+savemat(data_name,{"u":mesh_points})
