@@ -67,7 +67,7 @@ geo.AddRectangle((Wm,0),(Wm+PML_size,Dm),leftdomain=3,bc="PMLR")
 geo.AddCircle((x_sc,y_sc),b,leftdomain=0,rightdomain=1,bc="scatterer")
 geo.SetMaterial(2,"PMLL")
 geo.SetMaterial(3,"PMLR")
-mesh = Mesh(geo.GenerateMesh(maxh=5))
+mesh = Mesh(geo.GenerateMesh(maxh=MAX_H))
 pml_bnd = ["right","left"]
 mesh.Curve(3)
 #Draw(mesh)
@@ -81,7 +81,7 @@ mesh.SetPML(pml.Cartesian((0,0), (Wm,Dm), 2j),"PMLL|PMLR")
 
 # # Creating the finite element space based on the mesh we just created.
 # # We define the order of the finite elements, and boundary conditions (leave blank for Neummann b.c.'s)
-fes = H1(mesh, order=2, complex=True, dirichlet='top|bottom|scatterer') 
+fes = H1(mesh, order=3, complex=True, dirichlet='top|bottom|scatterer') 
 
 u, v = fes.TnT() # Creating Test and Trial functions u, v.
 
